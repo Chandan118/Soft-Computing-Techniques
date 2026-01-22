@@ -1,0 +1,62 @@
+<launch>
+  <!-- 
+    ARGUMENTS
+    - model: The model of the TurtleBot3 (burger, waffle, waffle_pi). 'burger' is used as it has the 360-degree LiDAR ideal for mapping.
+  -->
+  <arg name="model" default="burger" doc="model type [burger, waffle, waffle_pi]"/>
+
+  <!-- 
+    ROBOT DESCRIPTION
+    - Loads the robot's URDF/XACRO model file onto the ROS Parameter Server.
+    - This parameter is used by Gazebo to know what the robot looks like and by RViz to display it.
+  -->
+  <param name="robot_description" command="$(find xacro)/xacro $(find turtlebot3_description)/urdf/turtlebot3_$(arg model).urdf.xacro" />
+
+  <!-- 
+    GAZEBO SIMULATOR
+    - Includes the launch file to start the Gazebo environment.
+    - world_name: Specifies our custom world file.
+    - use_sim_time: CRITICAL! Tells all ROS nodes to use the simulated time from Gazebo, not the system clock.
+  -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find paper_nav_experiment)/worlds/lab_environment.world"/>
+    <arg name="paused" value="false"/>
+    <arg name="use_sim_time" value="true"/>
+    <arg name="gui" value="true"/>
+    <arg name="headless" value="false"/>
+    <arg name="debug" value="false"/>
+  </include>
+
+  <!-- 
+    SPAWN ROBOT
+    - Takes the 'robot_description' from the parameter server and spawns the model in Gazebo.
+    - The arguments -x, -y, -z define the starting position of the robot in the world.
+  -->
+  <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-urdf -model turtlebot3_$(arg model) -x 0 -y -4 -z 0 -param robot_description" />
+
+  <!-- 
+    SLAM (Simultaneous Localization and Mapping)
+    - Runs the slam_gmapping node from the gmapping package.
+    - This node listens to the laser scan topic (/scan) and the robot's movement (via TF transforms)
+      to build an occupancy grid map, which it publishes on the /map topic.
+    - Parameters are tuned for a small indoor environment.
+  -->
+  <node pkg="gmapping" type="slam_gmapping" name="slam_gmapping">
+    <param name="base_frame" value="base_footprint"/>
+    <param name="odom_frame" value="odom"/>
+    <param name="map_update_interval" value="2.0"/>
+    <param name="maxUrange" value="3.5"/>
+    <param name="particles" value="80"/>
+    <param name="delta" value="0.05"/>
+  </node>
+
+  <!-- 
+    VISUALIZATION
+    - Starts RViz, the 3D visualization tool for ROS.
+    - The '-d' argument loads our custom configuration file, which is set up to display
+      the map, the robot model, the laser scan, and the TF frames.
+    - 'required="true"' means that if you close RViz, the entire launch process will shut down.
+  -->
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find paper_nav_experiment)/rviz/slam_config.rviz" required="true" />
+
+</launch>

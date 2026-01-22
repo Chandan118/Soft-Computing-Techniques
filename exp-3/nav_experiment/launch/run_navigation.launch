@@ -1,0 +1,66 @@
+<launch>
+    <!--
+      ARGUMENTS
+      - model: The model of the TurtleBot3. Must be the same as used for mapping.
+      - map_file: The full path to the map file (.yaml) you created in the SLAM step.
+      - open_rviz: A flag to decide whether to launch RViz or not.
+    -->
+    <arg name="model" default="burger"/>
+    <arg name="map_file" default="$(find paper_nav_experiment)/maps/lab_map.yaml"/>
+    <arg name="open_rviz" default="true"/>
+
+    <!-- Start Gazebo with the same world used for mapping -->
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+        <arg name="world_name" value="$(find paper_nav_experiment)/worlds/lab_environment.world"/>
+        <arg name="paused" value="false"/>
+        <arg name="use_sim_time" value="true"/>
+        <arg name="gui" value="true"/>
+        <arg name="headless" value="false"/>
+        <arg name="debug" value="false"/>
+    </include>
+
+    <!--
+      ROBOT DESCRIPTION & SPAWNING
+      - Spawn the robot at the same starting position as in the SLAM launch file.
+      - This consistency helps the localization system (AMCL) to have a good initial guess.
+    -->
+    <param name="robot_description" command="$(find xacro)/xacro $(find turtlebot3_description)/urdf/turtlebot3_$(arg model).urdf.xacro" />
+    <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-urdf -model turtlebot3_$(arg model) -x 0 -y -4 -z 0 -param robot_description" />
+
+    <!--
+      NAVIGATION STACK
+      This section launches the core components for autonomous navigation.
+    -->
+
+    <!-- 1. MAP SERVER -->
+    <!-- Loads the pre-made map and publishes it on the /map topic. -->
+    <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)"/>
+
+    <!-- 2. LOCALIZATION (AMCL) -->
+    <!-- Adaptive Monte Carlo Localization: Estimates the robot's position on the map. -->
+    <include file="$(find turtlebot3_navigation)/launch/amcl.launch">
+        <!-- We provide an initial pose to help AMCL converge faster.
+             This should match the robot's spawn point. -->
+        <arg name="initial_pose_x" value="0.0"/>
+        <arg name="initial_pose_y" value="-4.0"/>
+        <arg name="initial_pose_a" value="1.57"/> <!-- Facing North -->
+    </include>
+
+    <!-- 3. NAVIGATION (MOVE_BASE) -->
+    <!-- The main navigation node that plans global and local paths and sends velocity commands. -->
+    <node name="move_base" pkg="move_base" type="move_base" respawn="false" output="screen">
+        <!-- Load all the parameter files we created for costmaps and planners -->
+        <rosparam file="$(find paper_nav_experiment)/param/costmap_common_params.yaml" command="load" ns="global_costmap" />
+        <rosparam file="$(find paper_nav_experiment)/param/costmap_common_params.yaml" command="load" ns="local_costmap" />
+        <rosparam file="$(find paper_nav_experiment)/param/local_costmap_params.yaml" command="load" />
+        <rosparam file="$(find paper_nav_experiment)/param/global_costmap_params.yaml" command="load" />
+        <rosparam file="$(find paper_nav_experiment)/param/base_local_planner_params.yaml" command="load" />
+    </node>
+
+    <!-- 4. VISUALIZATION (RVIZ) -->
+    <!-- Launches RViz with a configuration set up for monitoring navigation. -->
+    <group if="$(arg open_rviz)">
+        <node name="rviz" pkg="rviz" type="rviz" args="-d $(find paper_nav_experiment)/rviz/nav_config.rviz"/>
+    </group>
+
+</launch>

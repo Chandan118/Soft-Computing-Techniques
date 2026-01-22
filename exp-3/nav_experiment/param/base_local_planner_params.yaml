@@ -1,0 +1,47 @@
+# We use the TrajectoryPlannerROS, which is a common implementation of the DWA (Dynamic Window Approach) algorithm.
+TrajectoryPlannerROS:
+
+# Robot Configuration Parameters
+  # Maximum and minimum velocity limits for the robot.
+  max_vel_x: 0.22
+  min_vel_x: 0.1
+  max_vel_y: 0.0  # Not a holonomic robot
+  min_vel_y: 0.0
+  max_vel_theta: 2.75
+  min_vel_theta: -2.75
+  min_in_place_vel_theta: 1.0 # Minimum rotational velocity for turning in place
+
+  # Acceleration limits.
+  acc_lim_x: 2.5
+  acc_lim_y: 0.0 # Not a holonomic robot
+  acc_lim_theta: 3.2
+
+  # The robot is not holonomic, it cannot move sideways directly.
+  holonomic_robot: false
+
+# Goal Tolerance Parameters
+  # How close the robot needs to be to the goal to be considered "arrived".
+  yaw_goal_tolerance: 0.1  # radians
+  xy_goal_tolerance: 0.15   # meters
+  latch_xy_goal_tolerance: false
+
+# Forward Simulation Parameters
+  # How far into the future to simulate trajectories (in seconds).
+  sim_time: 1.7
+  # The granularity of the simulation.
+  sim_granularity: 0.025
+  # The angular granularity of the simulation.
+  angular_sim_granularity: 0.025
+  # Number of velocity samples to check in the x and theta dimensions.
+  vx_samples: 3
+  vtheta_samples: 20
+
+# Trajectory Scoring Parameters
+  # These weights determine how the planner scores different trajectories.
+  # It tries to find a trajectory that maximizes this weighted sum.
+  # path_distance_bias: How much to prefer staying close to the global path.
+  # goal_distance_bias: How much to prefer moving towards the local goal point.
+  # occdist_scale: How much to prefer staying away from obstacles.
+  path_distance_bias: 32.0
+  goal_distance_bias: 24.0
+  occdist_scale: 0.01

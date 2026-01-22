@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>paper_nav_experiment</name>
+  <version>0.1.0</version>
+  <description>
+    A ROS package to demonstrate SLAM (gmapping) and autonomous navigation (move_base)
+    for the paper experiment's baseline system, using a simulated TurtleBot3.
+  </description>
+
+  <!-- AUTHOR/MAINTAINER INFORMATION (CHANGE THESE) -->
+  <maintainer email="your_email@todo.com">Your Name</maintainer>
+  <license>BSD</license>
+  <!-- <url type="website">http://wiki.ros.org/paper_nav_experiment</url> -->
+  <!-- <author email="jane.doe@example.com">Jane Doe</author> -->
+
+  <!-- BUILD TOOL DEPENDENCY -->
+  <!-- This is always catkin for catkin packages. -->
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <!--
+    DEPENDENCIES
+    These are all the other ROS packages that our launch files and configuration
+    files rely on to function correctly.
+  -->
+
+  <!-- Core ROS libraries -->
+  <depend>rospy</depend>
+  <depend>roscpp</depend>
+  <depend>std_msgs</depend>
+  <depend>tf</depend>
+
+  <!-- Message types used for navigation and sensors -->
+  <depend>sensor_msgs</depend>
+  <depend>geometry_msgs</depend>
+  <depend>nav_msgs</depend>
+
+  <!-- Simulation & Robot Model -->
+  <depend>gazebo_ros</depend>
+  <depend>turtlebot3_gazebo</depend>
+  <depend>xacro</depend>
+
+  <!-- SLAM and Localization -->
+  <depend>gmapping</depend>
+  <depend>amcl</depend>
+  <depend>map_server</depend>
+
+  <!-- Navigation Stack -->
+  <depend>move_base</depend>
+  <depend>turtlebot3_navigation</depend>
+
+  <!-- Visualization -->
+  <depend>rviz</depend>
+
+
+  <!-- The export tag is used for other packages that depend on this one. -->
+  <export>
+  </export>
+</package>

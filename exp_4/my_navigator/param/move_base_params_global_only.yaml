@@ -1,0 +1,49 @@
+# This file configures move_base to ONLY provide a global plan.
+# The local planner and controller are disabled, allowing our custom
+# script to control the robot's velocity.
+
+# Set a non-existent local planner to disable it.
+base_local_planner: ""
+
+# Set controller frequency to 0 to prevent move_base from publishing cmd_vel
+controller_frequency: 0.0
+controller_patience: 15.0
+
+# Disable all recovery behaviors
+recovery_behavior_enabled: false
+clearing_rotation_allowed: false
+
+# We still need a global planner
+base_global_planner: "global_planner/GlobalPlanner"
+# base_global_planner: "navfn/NavfnROS" # Alternative global planner
+
+# Other parameters can be left as default, as they won't be used
+# by the disabled controller.
+planner_frequency: 1.0
+planner_patience: 5.0
+
+oscillation_timeout: 0.0
+oscillation_distance: 0.5
+
+# Additional parameters to ensure no cmd_vel publishing
+max_planning_retries: 0
+controller_max_retries: 0
+
+# Disable the controller completely
+controller_interface: ""
+
+# Global planner specific parameters
+GlobalPlanner:
+  use_dijkstra: false
+  use_quadratic: true
+  use_grid_path: false
+  old_navfn_behavior: false
+  lethal_cost: 253
+  neutral_cost: 50
+  cost_factor: 3.0
+  publish_potential: true
+  publish_scale: 100
+  planner_window_x: 0.0
+  planner_window_y: 0.0
+  default_tolerance: 0.0
+  visualize_potential: false

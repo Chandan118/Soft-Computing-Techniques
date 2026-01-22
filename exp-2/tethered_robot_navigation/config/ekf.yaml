@@ -1,0 +1,66 @@
+# Professional EKF Configuration for robot_localization
+
+# General settings
+frequency: 50.0
+sensor_timeout: 0.1
+two_d_mode: false
+
+# Frame configuration
+# These frames are standard in ROS Navigation
+map_frame: map
+odom_frame: odom          # The world-fixed frame where the robot's journey begins
+base_link_frame: base_link # The frame attached to the robot's main body
+world_frame: odom          # The EKF will publish the odom -> base_link transform
+
+# --- Sensor Input Configuration ---
+# The EKF fuses any number of odometry and IMU sources.
+# We will configure two primary sources: odometry and IMU.
+
+# ODOMETRY (e.g., from visual odometry or wheel encoders)
+# Topic name is set in the launch file for flexibility.
+odom0: /noisy_odom
+odom0_config:
+  # [X, Y, Z, Roll, Pitch, Yaw, Vx, Vy, Vz, Vroll, Vpitch, Vyaw, Ax, Ay, Az]
+  [true,  true,  false,  # Fuse X, Y position
+   false, false, true,   # Fuse Yaw orientation
+   false, false, false,
+   false, false, false,
+   false, false, false]
+odom0_differential: false # Position is measured directly
+odom0_relative: false
+
+# IMU (Inertial Measurement Unit)
+# Topic name is set in the launch file.
+imu0: /imu/data
+imu0_config:
+  # [X, Y, Z, Roll, Pitch, Yaw, Vx, Vy, Vz, Vroll, Vpitch, Vyaw, Ax, Ay, Az]
+  [false, false, false,
+   true,  true,  true,     # Fuse Roll, Pitch, Yaw orientation
+   false, false, false,
+   true,  true,  true,     # Fuse angular velocities
+   false, false, false]
+imu0_differential: false
+imu0_relative: false
+imu_remove_gravitational_acceleration: true # Essential for most IMUs
+
+# --- Filter Tuning: Process Noise Covariance ---
+# This matrix represents the filter's uncertainty about its own motion model.
+# HIGHER values mean LESS trust in the prediction step.
+# These are well-tuned starting values. The diagonal corresponds to:
+# X, Y, Z, R, P, Y, Vx, Vy, Vz, Vroll, Vpitch, Vyaw, Ax, Ay, Az
+process_noise_covariance:
+  [1.0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+   0, 1.0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+   0, 0, 1.0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+   0, 0, 0, 0.3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+   0, 0, 0, 0, 0.3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+   0, 0, 0, 0, 0, 0.3, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+   0, 0, 0, 0, 0, 0, 1.0, 0, 0, 0, 0, 0, 0, 0, 0,
+   0, 0, 0, 0, 0, 0, 0, 1.0, 0, 0, 0, 0, 0, 0, 0,
+   0, 0, 0, 0, 0, 0, 0, 0, 1.0, 0, 0, 0, 0, 0, 0,
+   0, 0, 0, 0, 0, 0, 0, 0, 0, 0.5, 0, 0, 0, 0, 0,
+   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.5, 0, 0, 0, 0,
+   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.5, 0, 0, 0,
+   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.1, 0, 0,
+   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.1, 0,
+   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.1]
