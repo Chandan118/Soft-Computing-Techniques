@@ -1,5 +1,10 @@
 # Soft Computing Techniques
 
+![License](https://img.shields.io/badge/License-MIT-blue.svg)
+![ROS](https://img.shields.io/badge/ROS-Noetic-orange.svg)
+![Platform](https://img.shields.io/badge/Platform-Intel%20Loihi%202-green.svg)
+![Status](https://img.shields.io/badge/Status-Submitted-yellow.svg)
+
 **Submitted to Journal of Field Robotics**
 
 ## Cite as:
