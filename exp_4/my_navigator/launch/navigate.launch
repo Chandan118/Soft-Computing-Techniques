@@ -1,0 +1,65 @@
+<launch>
+  <!-- Arguments -->
+  <arg name="model" default="$(env TURTLEBOT3_MODEL)" doc="model type [burger, waffle, waffle_pi]"/>
+  <arg name="map_file" default="$(find turtlebot3_navigation)/maps/map.yaml"/>
+  <arg name="open_rviz" default="true"/>
+  <arg name="move_forward_only" default="false"/>
+  <!-- Choose which navigator script to run: "hybrid" or "fuzzy" -->
+  <arg name="navigator_type" default="hybrid" doc="Type of navigator to use [hybrid, fuzzy]"/>
+
+  <!-- TurtleBot3 in Gazebo -->
+  <include file="$(find turtlebot3_gazebo)/launch/turtlebot3_world.launch">
+    <arg name="model" value="$(arg model)" />
+  </include>
+
+  <!-- AMCL -->
+  <include file="$(find turtlebot3_navigation)/launch/amcl.launch"/>
+
+  <!-- 
+    VELOCITY MUXER
+    This ensures only one system controls the robot at a time.
+    Our custom navigator will have priority over move_base.
+  -->
+  <node pkg="topic_tools" type="mux" name="cmd_vel_mux" 
+        args="/cmd_vel /cmd_vel_nav /cmd_vel_teleop" 
+        output="screen">
+    <remap from="mux" to="cmd_vel_mux"/>
+  </node>
+
+  <!-- 
+    MOVE BASE (with our custom parameters)
+    We run the move_base node, but we load a special parameter file.
+    This file disables the local planner and recovery behaviors,
+    so move_base only provides the global plan and costmaps.
+    Our python script will handle all robot motion.
+  -->
+  <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+    <rosparam file="$(find my_navigator)/param/costmap_common_params.yaml" command="load" ns="global_costmap" />
+    <rosparam file="$(find my_navigator)/param/costmap_common_params.yaml" command="load" ns="local_costmap" />
+    <rosparam file="$(find my_navigator)/param/local_costmap_params.yaml" command="load" />
+    <rosparam file="$(find my_navigator)/param/global_costmap_params.yaml" command="load" />
+    <!-- THIS IS THE CRITICAL PART -->
+    <rosparam file="$(find my_navigator)/param/move_base_params_global_only.yaml" command="load" />
+    <!-- Redirect move_base's cmd_vel to a different topic -->
+    <remap from="cmd_vel" to="cmd_vel_move_base"/>
+  </node>
+
+  <!-- rviz -->
+  <group if="$(arg open_rviz)"> 
+    <node pkg="rviz" type="rviz" name="rviz" required="true"
+          args="-d $(find my_navigator)/rviz/my_navigator.rviz"/>
+  </group>
+
+  <!-- 
+    Start the chosen navigator script.
+    The 'if' and 'unless' attributes ensure only one is launched.
+  -->
+  <group if="$(eval arg('navigator_type') == 'hybrid')">
+    <node pkg="my_navigator" type="hybrid_navigator.py" name="hybrid_navigator" output="screen" />
+  </group>
+
+  <group if="$(eval arg('navigator_type') == 'fuzzy')">
+    <node pkg="my_navigator" type="fuzzy_navigator.py" name="fuzzy_navigator" output="screen" />
+  </group>
+
+</launch>

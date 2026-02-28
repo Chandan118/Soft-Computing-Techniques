@@ -1,0 +1,31 @@
+<launch>
+  <!-- Arguments -->
+  <arg name="model" default="$(env TURTLEBOT3_MODEL)" doc="model type [burger, waffle, waffle_pi]"/>
+
+  <!-- TurtleBot3 in Gazebo -->
+  <include file="$(find turtlebot3_gazebo)/launch/turtlebot3_world.launch">
+    <arg name="model" value="$(arg model)" />
+  </include>
+
+  <!-- AMCL -->
+  <include file="$(find turtlebot3_navigation)/launch/amcl.launch"/>
+
+  <!-- 
+    MOVE BASE (with our custom parameters)
+    We run the move_base node, but we load a special parameter file.
+    This file disables the local planner and recovery behaviors,
+    so move_base only provides the global plan and costmaps.
+  -->
+  <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+    <rosparam file="$(find my_navigator)/param/costmap_common_params.yaml" command="load" ns="global_costmap" />
+    <rosparam file="$(find my_navigator)/param/costmap_common_params.yaml" command="load" ns="local_costmap" />
+    <rosparam file="$(find my_navigator)/param/local_costmap_params.yaml" command="load" />
+    <rosparam file="$(find my_navigator)/param/global_costmap_params.yaml" command="load" />
+    <!-- THIS IS THE CRITICAL PART -->
+    <rosparam file="$(find my_navigator)/param/move_base_params_global_only.yaml" command="load" />
+  </node>
+
+  <!-- Test the make_plan service -->
+  <node pkg="my_navigator" type="test_make_plan.py" name="make_plan_tester" output="screen" />
+
+</launch> 

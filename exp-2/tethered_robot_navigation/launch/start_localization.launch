@@ -1,0 +1,34 @@
+<launch>
+    <!--
+      Master launch file for tethered robot localization and navigation.
+      - Layer 1: EKF for robust state estimation.
+      - Layer 2: Bug Navigator for obstacle avoidance.
+    -->
+
+    <!-- ========== ARGUMENTS ========== -->
+    <arg name="use_simulator" default="true" />
+    <arg name="run_bug_nav" default="true" />
+
+    <!-- ========== SIMULATOR ========== -->
+    <node pkg="tethered_robot_navigation" type="robot_simulator.py" name="robot_simulator" output="screen" if="$(arg use_simulator)" />
+    
+    <!-- ========== EKF: SENSOR FUSION NODE (Layer 1) ========== -->
+    <node pkg="robot_localization" type="ekf_localization_node" name="ekf_se" clear_params="true">
+        <rosparam command="load" file="$(find tethered_robot_navigation)/config/ekf.yaml" />
+        <!-- In simulation, EKF uses topics published by the simulator -->
+        <remap from="/noisy_odom" to="/noisy_odom" />
+        <remap from="/imu/data"   to="/imu/data" />
+    </node>
+    
+    <!-- ========== BUG NAVIGATOR (Layer 2) ========== -->
+    <node pkg="tethered_robot_navigation" type="bug_navigator.py" name="bug_navigator" output="screen" if="$(arg run_bug_nav)">
+        <!-- Parameters for the Bug algorithm -->
+        <param name="linear_speed" value="0.4" />
+        <param name="angular_speed" value="0.6" />
+        <param name="obstacle_threshold" value="0.7" />
+    </node>
+    
+    <!-- ========== VISUALIZATION ========== -->
+    <node pkg="rviz" type="rviz" name="rviz" args="-d $(find tethered_robot_navigation)/rviz/localization_demo.rviz" />
+
+</launch>

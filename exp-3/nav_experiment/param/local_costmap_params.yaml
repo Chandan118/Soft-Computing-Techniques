@@ -1,0 +1,23 @@
+local_costmap:
+  # The global frame for the costmap, which should be a smooth, continuous frame like 'odom'.
+  global_frame: odom
+  # The frame of the robot's base.
+  robot_base_frame: base_footprint
+
+  # How often to update and publish the costmap (in Hz). Higher frequency for reactivity.
+  update_frequency: 5.0
+  publish_frequency: 2.0
+
+  # The local_costmap is NOT based on the static map. It's built purely from live sensor data.
+  static_map: false
+  # It's a 'rolling_window', meaning the map moves with the robot.
+  rolling_window: true
+  width: 3.0   # Width of the costmap window in meters
+  height: 3.0  # Height of the costmap window in meters
+  resolution: 0.05 # Resolution of the costmap in meters/cell
+
+  # The plugins define the layers that make up the costmap.
+  # Note: no static_layer here.
+  plugins:
+    - {name: obstacle_layer,  type: "costmap_2d::ObstacleLayer"}
+    - {name: inflation_layer, type: "costmap_2d::InflationLayer"}

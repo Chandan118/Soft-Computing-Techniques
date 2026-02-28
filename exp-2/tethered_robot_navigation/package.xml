@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>tethered_robot_navigation</name>
+  <version>0.1.0</version>
+  <description>
+    A ROS package for the adaptive hybrid navigation of tethered robots.
+    This package includes:
+    1. A simulator for publishing noisy sensor data (Odometry, IMU, LaserScan).
+    2. An EKF-based sensor fusion module for robust state estimation using 'robot_localization'.
+    3. An implementation of the Bug navigation algorithm for goal-oriented obstacle avoidance.
+  </description>
+
+  <!-- You should fill in your name and email here -->
+  <maintainer email="robotics@user.com">Your Name</maintainer>
+
+  <!-- A permissive license is good for research and development -->
+  <license>MIT</license>
+
+  <!-- The build tool for ROS 1 is catkin -->
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <!-- 
+    Build and Execution Dependencies.
+    These are all the other ROS packages that our code needs to compile and run.
+    It's good practice to list them for both building and execution.
+  -->
+  <depend>geometry_msgs</depend> <!-- For Twist, Pose, Quaternion messages -->
+  <depend>nav_msgs</depend>      <!-- For Odometry message -->
+  <depend>rospy</depend>         <!-- The ROS Python client library -->
+  <depend>sensor_msgs</depend>   <!-- For Imu and LaserScan messages -->
+  <depend>std_msgs</depend>      <!-- For standard message types -->
+  <depend>tf</depend>            <!-- For handling coordinate frame transformations -->
+
+  <!-- 
+    Execution-only Dependencies.
+    These packages are needed to run our launch files but not to build our scripts.
+  -->
+  <exec_depend>robot_localization</exec_depend> <!-- For the EKF node -->
+  <exec_depend>rviz</exec_depend>                <!-- For visualization -->
+
+  <!-- The export tag is used for packages that depend on this one -->
+  <export>
+  </export>
+</package>
