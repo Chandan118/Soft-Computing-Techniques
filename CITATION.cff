@@ -1,0 +1,28 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it using the metadata below."
+type: software
+title: "Soft Computing Techniques for Adaptive Hybrid Navigation of Tethered Robots"
+version: "1.0.0"
+date-released: "2025-03-23"
+doi: "10.22541/au.173772926.68166096/v1"
+abstract: >-
+  Implementation of soft computing techniques (fuzzy logic, genetic algorithms) for adaptive hybrid navigation methods applied to tethered robots in dynamic environments.
+license: MIT
+authors:
+  - family-names: Sheikder
+    given-names: Chandan
+    email: chandan@bit.edu.cn
+    affiliation: "Beijing Institute of Technology (BIT)"
+    orcid: "https://orcid.org/0000-0003-1459-8747"
+repository-code: "https://github.com/Chandan118/Soft-Computing-Techniques"
+keywords:
+  - "soft computing"
+  - "fuzzy logic"
+  - "genetic algorithm"
+  - "tethered robot"
+  - "hybrid navigation"
+  - "ROS"
+contact:
+  - name: Chandan Sheikder
+    email: chandan@bit.edu.cn
+    website: "https://chandan118.github.io"
