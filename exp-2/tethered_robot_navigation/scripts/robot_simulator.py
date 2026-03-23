@@ -1,4 +1,17 @@
 #!/usr/bin/env python
+"""
+robot_simulator.py
+
+Author      : Chandan Sheikder
+Email       : chandan@bit.edu.cn
+Phone       : +8618222390506
+Affiliation : Beijing Institute of Technology (BIT)
+Date        : 2026-03-23
+
+Description:
+    Module for Robot Simulator
+"""
+
 import rospy
 import tf
 import math

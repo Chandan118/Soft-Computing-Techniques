@@ -1,3 +1,10 @@
+# File        : base_local_planner_params.yaml
+# Author      : Chandan Sheikder
+# Email       : chandan@bit.edu.cn
+# Phone       : +8618222390506
+# Affiliation : Beijing Institute of Technology (BIT)
+# Date        : 2026-03-23
+#
 # We use the TrajectoryPlannerROS, which is a common implementation of the DWA (Dynamic Window Approach) algorithm.
 TrajectoryPlannerROS:
 

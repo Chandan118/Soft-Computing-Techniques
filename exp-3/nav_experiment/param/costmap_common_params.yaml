@@ -1,3 +1,10 @@
+# File        : costmap_common_params.yaml
+# Author      : Chandan Sheikder
+# Email       : chandan@bit.edu.cn
+# Phone       : +8618222390506
+# Affiliation : Beijing Institute of Technology (BIT)
+# Date        : 2026-03-23
+#
 # A footprint is a polygon that represents the 2D shape of the robot.
 # This is a square shape that generously covers the TurtleBot3 Burger.
 footprint: [[0.105, 0.105], [0.105, -0.105], [-0.105, -0.105], [-0.105, 0.105]]
