@@ -1,3 +1,10 @@
+# File        : local_costmap_params.yaml
+# Author      : Chandan Sheikder
+# Email       : chandan@bit.edu.cn
+# Phone       : +8618222390506
+# Affiliation : Beijing Institute of Technology (BIT)
+# Date        : 2026-03-23
+#
 local_costmap:
   # The global frame for the costmap, which should be a smooth, continuous frame like 'odom'.
   global_frame: odom

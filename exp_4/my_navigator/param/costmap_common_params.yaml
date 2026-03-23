@@ -1,3 +1,10 @@
+# File        : costmap_common_params.yaml
+# Author      : Chandan Sheikder
+# Email       : chandan@bit.edu.cn
+# Phone       : +8618222390506
+# Affiliation : Beijing Institute of Technology (BIT)
+# Date        : 2026-03-23
+#
 obstacle_range: 2.5
 raytrace_range: 3.0
 footprint: [[-0.105, -0.105], [-0.105, 0.105], [0.041, 0.105], [0.041, -0.105]]
