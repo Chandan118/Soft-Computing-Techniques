@@ -1,0 +1,3 @@
+# ROS bag files (too large for Git)
+*.bag
+bag/*.bag

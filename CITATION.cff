@@ -4,7 +4,7 @@ type: software
 title: "Soft Computing Techniques for Adaptive Hybrid Navigation of Tethered Robots"
 version: "1.0.0"
 date-released: "2025-03-23"
-doi: "10.22541/au.173772926.68166096/v1"
+doi: "10.1002/rob.70222"
 abstract: >-
   Implementation of soft computing techniques (fuzzy logic, genetic algorithms) for adaptive hybrid navigation methods applied to tethered robots in dynamic environments.
 license: MIT
