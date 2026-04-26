@@ -1,9 +1,7 @@
 # File        : slsa-generic-generator.yml
 # Author      : Chandan Sheikder
 # Email       : chandan@bit.edu.cn
-# Phone       : +8618222390506
 # Affiliation : Beijing Institute of Technology (BIT)
-# Date        : 2026-03-23
 #
 name: SLSA generic generator
 on:
@@ -38,7 +36,8 @@ jobs:
       actions: read
       id-token: write
       contents: write
-    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v1.4.0
+    # Upgraded from v1.4.0 to v2.0.0 to fix deprecated workflow errors
+    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v2.0.0
     with:
       base64-subjects: "${{ needs.build.outputs.digests }}"
       upload-assets: true
