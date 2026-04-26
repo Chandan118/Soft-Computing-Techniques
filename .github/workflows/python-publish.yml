@@ -1,9 +1,7 @@
 # File        : python-publish.yml
 # Author      : Chandan Sheikder
 # Email       : chandan@bit.edu.cn
-# Phone       : +8618222390506
 # Affiliation : Beijing Institute of Technology (BIT)
-# Date        : 2026-03-23
 #
 name: Upload Python Package
 
@@ -16,13 +14,14 @@ permissions:
 
 jobs:
   deploy:
-
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write  # Required for trusted publishing (OIDC)
 
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python
-      uses: actions/setup-python@v3
+      uses: actions/setup-python@v5
       with:
         python-version: '3.x'
     - name: Install dependencies
@@ -32,7 +31,8 @@ jobs:
     - name: Build package
       run: python -m build
     - name: Publish package
-      uses: pypa/gh-action-pypi-publish@27b31702a0e7fc50959f5ad993c78deac1bdfc29
+      # Uses trusted publishing (no PYPI_API_TOKEN secret required)
+      # Requires PyPI trusted publisher configured at https://pypi.org/manage/project/
+      uses: pypa/gh-action-pypi-publish@release/v1
       with:
-        user: __token__
-        password: ${{ secrets.PYPI_API_TOKEN }}
+        packages-dir: dist/
